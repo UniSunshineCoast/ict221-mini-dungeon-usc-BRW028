@@ -3,6 +3,7 @@ package dungeon.gui;
 import dungeon.engine.Cell;
 import dungeon.engine.GameEngine;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
 public class Controller {
@@ -13,7 +14,7 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        engine = new GameEngine(10);
+        engine = new GameEngine(10,10);
 
         updateGui();
     }
@@ -23,10 +24,13 @@ public class Controller {
         gridPane.getChildren().clear();
 
         //Loop through map board and add each cell into grid pane
-        for(int i = 0; i < engine.getSize(); i++) {
-            for (int j = 0; j < engine.getSize(); j++) {
-                Cell cell = engine.getMap()[i][j];
-                gridPane.add(cell, j, i);
+        int mapSize = engine.getSize(10); // Remove unnecessary argument
+
+        for (int x = 0; x < mapSize; x++) {
+            for (int y = 0; y < mapSize; y++) {
+                Node cell = engine.getMap()[x][y]; // Ensure Cell is a JavaFX Node
+                gridPane.add(cell, y, x); // Verify (column, row) order
+
             }
         }
         gridPane.setGridLinesVisible(true);

@@ -2,59 +2,77 @@ package dungeon.engine;
 
 import javafx.scene.text.Text;
 
+import java.util.Scanner;
+
+
 public class GameEngine {
-
-    /**
-     * An example board to store the current game state.
-     *
-     * Note: depending on your game, you might want to change this from 'int' to String or something?
-     */
-    private Cell[][] map;
-
-    /**
-     * Creates a square game board.
-     *
-     * @param size the width and height.
-     */
-    public GameEngine(int size) {
-        map = new Cell[size][size];
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                Cell cell = new Cell();
-                Text text = new Text(i + "," + j);
-                cell.getChildren().add(text);
-                map[i][j] = cell;
-            }
-        }
-
-        map[0][0].setStyle("-fx-background-color: #7baaa4");
-        map[size-1][size-1].setStyle("-fx-background-color: #7baaa4");
-    }
 
     /**
      * The size of the current game.
      *
      * @return this is both the width and the height.
      */
-    public int getSize() {
-        return map.length;
+    public String getMap() {
+        Map.printMap();
     }
 
-    /**
-     * The map of the current game.
-     *
-     * @return the map, which is a 2d array.
-     */
-    public Cell[][] getMap() {
-        return map;
+    private int x, y;
+
+    public GameEngine(int startX, int startY) {
+        this.x = startX;
+        this.y = startY;}
+        public int getSize(int size){
+            return 10;
     }
 
-    /**
-     * Plays a text-based game
-     */
-    public static void main(String[] args) {
-        GameEngine engine = new GameEngine(10);
-        System.out.printf("The size of map is %d * %d\n", engine.getSize(), engine.getSize());
+    public static void main (String[] args) {
+        GameEngine engine = new GameEngine(9, 9);
+        //Cell[][] map1 = map.printMap();
+        int command; //w = up; s = down; a = left; d = right
+// Set player name
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter player name: ");
+        String playerName = scanner.nextLine();
+        Player player1 = new Player(playerName, 0, 10, 100);
+        player1.displayPlayerInfo();
+
+
+        while (player1.getHealth() < 0 && player1.getStamina() > 1)
+        {
+            System.out.print("Command 1: Up 2: Down 3: Left 4: Right ");
+            command = scanner.nextInt();
+            switch (command) {
+                case 1 -> engine.move("Up");
+                case 2 -> engine.move("Down");
+                case 3 -> engine.move("Left");
+                case 4 -> engine.move("Right");
+            }
+            player1.reduceStamina(1);
+        }
+    }
+
+    public void move(String direction) {
+        int playerX = this.x;
+        int playerY = this.y;
+        switch (direction.toLowerCase()) {
+            case "left" -> {
+                if (playerX > 0) playerX -= 1;
+            }
+            case "right" -> {
+                if (playerX < 9) playerX += 1;
+            }
+            case "up" -> {
+                if (playerY > 0) playerY -= 1;
+            }
+            case "down" -> {
+                if (playerY < 9 ) playerY += 1;
+            }
+            default -> {
+                String s = "Invalid Input";
+            }
+        }
+        this.x = playerX;
+        this.y = playerY;
+
     }
 }
